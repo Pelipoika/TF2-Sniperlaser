@@ -3,8 +3,6 @@
 
 #pragma newdecls required
 
-#define LASERBEAM "sprites/laserbeam.vmt"
-
 ConVar g_cvarLaserEnabled;
 ConVar g_cvarLaserRandom;
 ConVar g_cvarLaserRED;
