@@ -33,11 +33,6 @@ public void OnPluginStart()
 	}
 }
 
-public void OnMapStart()
-{
-	PrecacheModel(LASERBEAM);
-}
-
 public void OnClientPutInServer(int client)
 {
 	g_iEyeProp[client] = INVALID_ENT_REFERENCE;
