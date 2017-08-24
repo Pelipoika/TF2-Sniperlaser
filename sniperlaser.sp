@@ -19,7 +19,7 @@ public Plugin myinfo =
 	name = "[TF2] Sniperlaser",
 	author = "Pelipoika",
 	description = "Sniper rifles emit lasers",
-	version = "1.1",
+	version = "2.0",
 	url = ""
 };
 
