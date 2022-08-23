@@ -17,7 +17,7 @@ public Plugin myinfo =
 	name = "[TF2] Sniperlaser",
 	author = "Pelipoika",
 	description = "Sniper rifles emit lasers",
-	version = "2.0",
+	version = "2.1",
 	url = ""
 };
 
@@ -160,16 +160,36 @@ public void OnGameFrame()
 		{
 			if(env_sniperdot <= 0 && dotController > 0)
 			{
-				DispatchKeyValue(dotController, "origin", "99999 99999 99999");
+				DeleteEntity(dotController);
 				
-				SetVariantString("OnUser1 !self:kill::0.1:1");
-				AcceptEntityInput(dotController, "AddOutput");
-				AcceptEntityInput(dotController, "FireUser1");
+				// Also kill the beam.
+				int eyeBeam = EntRefToEntIndex(g_iEyeProp[i]);
+				if (eyeBeam != INVALID_ENT_REFERENCE) {
+					DeleteEntity(eyeBeam, true);
+					g_iEyeProp[i] = INVALID_ENT_REFERENCE;
+				}
 				
 				g_iDotController[i] = INVALID_ENT_REFERENCE;
 			}
 		}
 	}
+}
+
+bool DeleteEntity(int entity, bool parent = false) {
+	if (entity == INVALID_ENT_REFERENCE) return false;
+	
+	if (parent) {
+		AcceptEntityInput(entity, "ClearParent");
+		AcceptEntityInput(entity, "Stop");
+	}
+	
+	DispatchKeyValue(entity, "origin", "99999 99999 99999");
+	
+	SetVariantString("OnUser1 !self:kill::0.1:1");
+	AcceptEntityInput(entity, "AddOutput");
+	AcceptEntityInput(entity, "FireUser1");
+	
+	return true;
 }
 
 public void TF2_OnConditionRemoved(int client, TFCond condition)
@@ -179,14 +199,7 @@ public void TF2_OnConditionRemoved(int client, TFCond condition)
 		int iEyeProp = EntRefToEntIndex(g_iEyeProp[client])
 		if(iEyeProp != INVALID_ENT_REFERENCE)
 		{
-			AcceptEntityInput(iEyeProp, "ClearParent");
-			AcceptEntityInput(iEyeProp, "Stop");
-			
-			DispatchKeyValue(iEyeProp, "origin", "99999 99999 99999");
-			
-			SetVariantString("OnUser1 !self:kill::0.1:1");
-			AcceptEntityInput(iEyeProp, "AddOutput");
-			AcceptEntityInput(iEyeProp, "FireUser1");
+			DeleteEntity(iEyeProp, true);
 			
 			g_iEyeProp[client] = INVALID_ENT_REFERENCE;
 		}
